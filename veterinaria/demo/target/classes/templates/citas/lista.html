@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments/layout :: head('Agenda de citas')}"></head>
+
+<body>
+<header th:replace="~{fragments/layout :: barra}"></header>
+
+<main class="contenido">
+
+    <div class="encabezado-seccion">
+        <h1>Agenda de citas</h1>
+        <a sec:authorize="hasAnyRole('ADMIN','RECEPCION')"
+           class="boton" th:href="@{/citas/nueva}">+ Programar cita</a>
+    </div>
+
+    <p class="aviso ok" th:if="${mensaje}" th:text="${mensaje}"></p>
+
+    <table class="tabla">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Paciente</th>
+            <th>Motivo de consulta</th>
+            <th>Veterinario asignado</th>
+            <th sec:authorize="hasRole('ADMIN')">Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="cita : ${citas}">
+            <td th:text="${cita.id}">1</td>
+            <td th:text="${cita.fecha}">2026-08-15</td>
+            <td th:text="${cita.hora}">10:30</td>
+            <td th:text="${nombresPacientes.get(cita.pacienteId)} ?: 'Paciente eliminado'">Firulais</td>
+            <td th:text="${cita.motivo}">Vacuna anual</td>
+            <td th:text="${cita.veterinario}">Dra. Carla Munoz</td>
+            <td sec:authorize="hasRole('ADMIN')">
+                <form th:action="@{'/citas/' + ${cita.id} + '/eliminar'}" method="post">
+                    <button type="submit" class="boton boton-peligro">Cancelar</button>
+                </form>
+            </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(citas)}">
+            <td colspan="7" class="vacio">No hay citas programadas.</td>
+        </tr>
+        </tbody>
+    </table>
+
+</main>
+
+<footer th:replace="~{fragments/layout :: pie}"></footer>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments/layout :: head('Pacientes')}"></head>
+
+<body>
+<header th:replace="~{fragments/layout :: barra}"></header>
+
+<main class="contenido">
+
+    <div class="encabezado-seccion">
+        <h1>Pacientes registrados</h1>
+        <a sec:authorize="hasAnyRole('ADMIN','RECEPCION')"
+           class="boton" th:href="@{/pacientes/nuevo}">+ Registrar paciente</a>
+    </div>
+
+    <p class="aviso ok" th:if="${mensaje}" th:text="${mensaje}"></p>
+
+    <table class="tabla">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Nombre</th>
+            <th>Especie</th>
+            <th>Raza</th>
+            <th>Edad</th>
+            <th>Dueno</th>
+            <th sec:authorize="hasRole('ADMIN')">Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="paciente : ${pacientes}">
+            <td th:text="${paciente.id}">1</td>
+            <td th:text="${paciente.nombre}">Firulais</td>
+            <td th:text="${paciente.especie}">Perro</td>
+            <td th:text="${paciente.raza}">Quiltro</td>
+            <td th:text="${paciente.edad} + ' anios'">4 anios</td>
+            <td th:text="${paciente.dueno}">Maria Gonzalez</td>
+            <td sec:authorize="hasRole('ADMIN')">
+                <form th:action="@{'/pacientes/' + ${paciente.id} + '/eliminar'}" method="post">
+                    <button type="submit" class="boton boton-peligro">Eliminar</button>
+                </form>
+            </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(pacientes)}">
+            <td colspan="7" class="vacio">Aun no hay pacientes registrados.</td>
+        </tr>
+        </tbody>
+    </table>
+
+</main>
+
+<footer th:replace="~{fragments/layout :: pie}"></footer>
+</body>
+</html>

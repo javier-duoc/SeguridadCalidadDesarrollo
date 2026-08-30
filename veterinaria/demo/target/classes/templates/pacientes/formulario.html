@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('Registrar paciente')}"></head>
+
+<body>
+<header th:replace="~{fragments/layout :: barra}"></header>
+
+<main class="contenido contenido-angosto">
+
+    <section class="tarjeta">
+        <h1>Registrar nuevo paciente</h1>
+
+        <p class="aviso error" th:if="${error}" th:text="${error}"></p>
+
+        <form th:action="@{/pacientes}" th:object="${paciente}" method="post" class="formulario">
+
+            <div class="campo">
+                <label for="nombre">Nombre de la mascota</label>
+                <input type="text" id="nombre" th:field="*{nombre}" required/>
+            </div>
+
+            <div class="campo">
+                <label for="especie">Especie</label>
+                <select id="especie" th:field="*{especie}" required>
+                    <option value="">-- Seleccione --</option>
+                    <option value="Perro">Perro</option>
+                    <option value="Gato">Gato</option>
+                    <option value="Conejo">Conejo</option>
+                    <option value="Ave">Ave</option>
+                    <option value="Otro">Otro</option>
+                </select>
+            </div>
+
+            <div class="campo">
+                <label for="raza">Raza</label>
+                <input type="text" id="raza" th:field="*{raza}"/>
+            </div>
+
+            <div class="campo">
+                <label for="edad">Edad (anios)</label>
+                <input type="number" id="edad" th:field="*{edad}" min="0" max="40"/>
+            </div>
+
+            <div class="campo">
+                <label for="dueno">Dueno</label>
+                <input type="text" id="dueno" th:field="*{dueno}" required/>
+            </div>
+
+            <div class="acciones">
+                <button type="submit" class="boton">Guardar paciente</button>
+                <a class="boton boton-secundario" th:href="@{/pacientes}">Cancelar</a>
+            </div>
+        </form>
+    </section>
+
+</main>
+
+<footer th:replace="~{fragments/layout :: pie}"></footer>
+</body>
+</html>

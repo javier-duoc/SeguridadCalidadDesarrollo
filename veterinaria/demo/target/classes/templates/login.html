@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('Iniciar sesion')}"></head>
+
+<body>
+<header th:replace="~{fragments/layout :: barra}"></header>
+
+<main class="contenido contenido-angosto">
+
+    <section class="tarjeta">
+        <h1>Iniciar sesion</h1>
+
+        <p class="aviso error" th:if="${param.error}">
+            Usuario o clave incorrectos.
+        </p>
+        <p class="aviso ok" th:if="${param.logout}">
+            Tu sesion se cerro correctamente.
+        </p>
+
+        <!-- Thymeleaf agrega automaticamente el token CSRF a este formulario -->
+        <form th:action="@{/login}" method="post" class="formulario">
+            <div class="campo">
+                <label for="username">Usuario</label>
+                <input type="text" id="username" name="username" required autofocus/>
+            </div>
+            <div class="campo">
+                <label for="password">Clave</label>
+                <input type="password" id="password" name="password" required/>
+            </div>
+            <button type="submit" class="boton">Entrar</button>
+        </form>
+    </section>
+
+    <section class="tarjeta tarjeta-ayuda">
+        <h2>Usuarios de prueba</h2>
+        <table class="tabla">
+            <thead>
+            <tr><th>Usuario</th><th>Clave</th><th>Rol</th><th>Puede</th></tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>admin</td><td>admin123</td><td>ADMIN</td>
+                <td>Todo: registrar, eliminar y ver el equipo veterinario</td>
+            </tr>
+            <tr>
+                <td>recepcion</td><td>recep123</td><td>RECEPCION</td>
+                <td>Registrar pacientes y programar citas</td>
+            </tr>
+            <tr>
+                <td>vet</td><td>vet123</td><td>VETERINARIO</td>
+                <td>Solo consultar pacientes y agenda</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+</main>
+
+<footer th:replace="~{fragments/layout :: pie}"></footer>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments/layout :: head('Inicio')}"></head>
+
+<body>
+<header th:replace="~{fragments/layout :: barra}"></header>
+
+<main class="contenido">
+
+    <section class="portada">
+        <h1 th:text="${name}">VetCare</h1>
+        <p class="bajada">
+            Administra pacientes, agenda de citas y el equipo clinico de la veterinaria
+            desde un solo lugar.
+        </p>
+
+        <!-- Mensajes que llegan por querystring desde Spring Security -->
+        <p class="aviso ok" th:if="${param.logout}">Tu sesion se cerro correctamente.</p>
+    </section>
+
+    <!-- ================= VISITANTE SIN SESION ================= -->
+    <section sec:authorize="!isAuthenticated()" class="tarjeta">
+        <h2>Acceso al sistema</h2>
+        <p>Esta es una pagina <strong>publica</strong>. Para entrar a las funcionalidades
+            internas necesitas iniciar sesion con tu cuenta de la veterinaria.</p>
+        <a class="boton" th:href="@{/login}">Iniciar sesion</a>
+    </section>
+
+    <!-- ================= USUARIO AUTENTICADO ================= -->
+    <section sec:authorize="isAuthenticated()">
+        <h2>Hola, <span sec:authentication="name">usuario</span></h2>
+        <p class="bajada">Estas son las funcionalidades disponibles para tu rol.</p>
+
+        <div class="tarjetas">
+
+            <article class="tarjeta">
+                <h3>Pacientes</h3>
+                <p>Consulta la ficha de las mascotas registradas: nombre, especie, raza,
+                    edad y dueno.</p>
+                <a class="boton" th:href="@{/pacientes}">Ver pacientes</a>
+                <a sec:authorize="hasAnyRole('ADMIN','RECEPCION')"
+                   class="boton boton-secundario" th:href="@{/pacientes/nuevo}">Registrar paciente</a>
+            </article>
+
+            <article class="tarjeta">
+                <h3>Citas</h3>
+                <p>Revisa la agenda con fecha, hora, motivo de consulta y veterinario asignado.</p>
+                <a class="boton" th:href="@{/citas}">Ver agenda</a>
+                <a sec:authorize="hasAnyRole('ADMIN','RECEPCION')"
+                   class="boton boton-secundario" th:href="@{/citas/nueva}">Programar cita</a>
+            </article>
+
+            <article class="tarjeta" sec:authorize="hasRole('ADMIN')">
+                <h3>Equipo veterinario</h3>
+                <p>Listado del personal clinico y sus especialidades. Solo visible para
+                    el rol ADMIN.</p>
+                <a class="boton pendiente" th:href="@{/veterinarios}">Ver veterinarios</a>
+            </article>
+
+        </div>
+    </section>
+
+</main>
+
+<footer th:replace="~{fragments/layout :: pie}"></footer>
+</body>
+</html>

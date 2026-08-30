@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<!--
+  Fragmentos reutilizables por todas las paginas.
+  Se insertan con th:replace="~{fragments/layout :: nombreFragmento}"
+-->
+
+<head th:fragment="head(titulo)">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title th:text="'VetCare | ' + ${titulo}">VetCare</title>
+    <link rel="stylesheet" th:href="@{/css/estilos.css}"/>
+</head>
+
+<body>
+
+<!-- Barra superior con el menu. Los enlaces privados solo se dibujan si hay sesion. -->
+<header th:fragment="barra" class="barra">
+    <a class="marca" th:href="@{/home}">
+        <span class="marca-icono">&#128054;</span> VetCare
+    </a>
+
+    <nav class="menu">
+        <a th:href="@{/home}">Inicio</a>
+
+        <!-- TODO ALUMNOS (1 de 2): este enlace publico falla hasta que creen la ruta /nosotros -->
+        <a class="pendiente" th:href="@{/nosotros}" title="Pendiente: TODO alumnos 1">Nosotros</a>
+
+        <span sec:authorize="isAuthenticated()">
+            <a th:href="@{/pacientes}">Pacientes</a>
+            <a th:href="@{/citas}">Citas</a>
+        </span>
+
+        <!-- TODO ALUMNOS (2 de 2): este enlace privado falla hasta que creen la ruta /veterinarios -->
+        <a sec:authorize="hasRole('ADMIN')" class="pendiente"
+           th:href="@{/veterinarios}" title="Pendiente: TODO alumnos 2">Veterinarios</a>
+    </nav>
+
+    <div class="sesion">
+        <span sec:authorize="!isAuthenticated()">
+            <a class="boton boton-claro" th:href="@{/login}">Iniciar sesion</a>
+        </span>
+        <span sec:authorize="isAuthenticated()">
+            <span class="usuario">
+                <span sec:authentication="name">usuario</span>
+                <small sec:authentication="principal.authorities">roles</small>
+            </span>
+            <form th:action="@{/logout}" method="post" class="form-logout">
+                <button type="submit" class="boton boton-claro">Cerrar sesion</button>
+            </form>
+        </span>
+    </div>
+</header>
+
+<footer th:fragment="pie" class="pie">
+    <p>VetCare &middot; Sistema de Gestion Veterinaria &middot; DUOC UC - Seguridad y Calidad en el Desarrollo</p>
+</footer>
+
+</body>
+</html>
