@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('Programar cita')}"></head>
+
+<body>
+<header th:replace="~{fragments/layout :: barra}"></header>
+
+<main class="contenido contenido-angosto">
+
+    <section class="tarjeta">
+        <h1>Programar nueva cita</h1>
+
+        <p class="aviso error" th:if="${error}" th:text="${error}"></p>
+
+        <form th:action="@{/citas}" th:object="${cita}" method="post" class="formulario">
+
+            <div class="campo">
+                <label for="pacienteId">Paciente</label>
+                <select id="pacienteId" th:field="*{pacienteId}" required>
+                    <option value="">-- Seleccione --</option>
+                    <option th:each="p : ${pacientes}"
+                            th:value="${p.id}"
+                            th:text="${p.nombre} + ' (' + ${p.especie} + ' - ' + ${p.dueno} + ')'">Firulais</option>
+                </select>
+            </div>
+
+            <div class="campo">
+                <label for="fecha">Fecha</label>
+                <input type="date" id="fecha" th:field="*{fecha}" required/>
+            </div>
+
+            <div class="campo">
+                <label for="hora">Hora</label>
+                <input type="time" id="hora" th:field="*{hora}" required/>
+            </div>
+
+            <div class="campo">
+                <label for="motivo">Motivo de la consulta</label>
+                <input type="text" id="motivo" th:field="*{motivo}"
+                       placeholder="Ej: control anual, vacuna, curacion" required/>
+            </div>
+
+            <div class="campo">
+                <label for="veterinario">Veterinario asignado</label>
+                <select id="veterinario" th:field="*{veterinario}" required>
+                    <option value="">-- Seleccione --</option>
+                    <option th:each="v : ${veterinarios}"
+                            th:value="${v.nombre}"
+                            th:text="${v.nombre} + ' - ' + ${v.especialidad}">Dra. Carla Munoz</option>
+                </select>
+            </div>
+
+            <div class="acciones">
+                <button type="submit" class="boton">Programar cita</button>
+                <a class="boton boton-secundario" th:href="@{/citas}">Cancelar</a>
+            </div>
+        </form>
+    </section>
+
+</main>
+
+<footer th:replace="~{fragments/layout :: pie}"></footer>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments/layout :: head('Acceso denegado')}"></head>
+
+<body>
+<header th:replace="~{fragments/layout :: barra}"></header>
+
+<main class="contenido contenido-angosto">
+
+    <section class="tarjeta">
+        <h1>403 - Acceso denegado</h1>
+        <p>Tu sesion esta iniciada, pero tu rol no tiene permiso para entrar a esta seccion.</p>
+        <p sec:authorize="isAuthenticated()">
+            Estas conectado como <strong sec:authentication="name">usuario</strong>
+            con los permisos <span sec:authentication="principal.authorities">roles</span>.
+        </p>
+        <a class="boton" th:href="@{/home}">Volver al inicio</a>
+    </section>
+
+</main>
+
+<footer th:replace="~{fragments/layout :: pie}"></footer>
+</body>
+</html>
